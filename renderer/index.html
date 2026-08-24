@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' file:; script-src 'self' file: blob:; worker-src 'self' file: blob:; style-src 'self' 'unsafe-inline' file:; img-src 'self' file: data: http://127.0.0.1:*; frame-src http://127.0.0.1:*; font-src 'self' file:; connect-src 'self' file: http://127.0.0.1:*;">
+<title>PHP Studio</title>
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+
+<!-- ═══ TITLE BAR (custom, drag region, integrated menu) ═══ -->
+<header id="titlebar">
+  <div class="tb-app">
+    <div class="tb-logo" aria-hidden="true"></div>
+    <nav id="menubar" role="menubar"></nav>
+  </div>
+  <div class="tb-title" id="tbTitle">PHP Studio</div>
+  <div class="tb-spacer"></div>
+</header>
+
+<!-- ═══ TOOLBAR ═══ -->
+<div id="toolbar"></div>
+
+<!-- ═══ WORKSPACE ═══ -->
+<main id="workspace">
+  <aside class="panel" id="panelLeft">
+    <div class="panel-tabs" id="leftTabs">
+      <button class="ptab active" data-view="explorer" title="Your website files">Files</button>
+      <button class="ptab" data-view="components" title="Drag new things onto the page">Add</button>
+      <button class="ptab" data-view="search" title="Find text anywhere in the site">Search</button>
+    </div>
+    <div class="panel-body" id="leftBody">
+      <div class="pview active" id="viewExplorer">
+        <div class="pview-toolbar">
+          <span class="pview-label" id="projectName">No project</span>
+          <span class="flex1"></span>
+          <button class="icon-btn sm" id="btnRefreshTree" title="Refresh"></button>
+          <button class="icon-btn sm" id="btnCollapseTree" title="Collapse all"></button>
+        </div>
+        <div class="tree" id="fileTree" tabindex="0"></div>
+      </div>
+      <div class="pview" id="viewComponents">
+        <div class="pview-toolbar"><span class="pview-label">Drag onto the page</span></div>
+        <div id="componentList"></div>
+      </div>
+      <div class="pview" id="viewSearch">
+        <div class="search-box">
+          <input type="text" id="searchInput" placeholder="Search in project…" spellcheck="false">
+          <label class="chk"><input type="checkbox" id="searchRegex"> Regex</label>
+        </div>
+        <div class="search-results" id="searchResults"></div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="splitter" id="splitLeft" data-panel="panelLeft"></div>
+
+  <aside class="panel" id="panelNav">
+    <div class="panel-header"><span>Page Structure</span>
+      <span class="flex1"></span>
+      <button class="icon-btn sm" id="btnNavRefresh" title="Refresh outline"></button>
+      <button class="icon-btn sm collapse-btn" data-panel="panelNav" title="Collapse"></button>
+    </div>
+    <div class="tree" id="navTree" tabindex="0"></div>
+  </aside>
+
+  <div class="splitter" id="splitNav" data-panel="panelNav"></div>
+
+  <section id="center">
+    <div id="editorTabs"></div>
+    <div id="centerBody">
+      <div id="codePane"><div id="monaco"></div></div>
+      <div class="splitter v" id="splitCode"></div>
+      <div id="previewPane">
+        <div id="deviceBar">
+          <button class="dev-btn active" data-w="0" title="Responsive — fill panel">Fill</button>
+          <button class="dev-btn" data-w="1280" title="Desktop 1280">Desktop</button>
+          <button class="dev-btn" data-w="768" title="Tablet 768">Tablet</button>
+          <button class="dev-btn" data-w="390" title="Phone 390">Phone</button>
+          <span class="flex1"></span>
+          <span id="previewUrl" class="preview-url"></span>
+          <button class="icon-btn sm" id="btnPreviewRefresh" title="Refresh preview (F5)"></button>
+          <button class="icon-btn sm" id="btnPreviewExternal" title="Open in browser"></button>
+        </div>
+        <div id="previewViewport">
+          <div id="previewFrameWrap">
+            <iframe id="previewFrame" title="Live preview"></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="splitter" id="splitProps" data-panel="panelProps" data-before="true"></div>
+
+  <aside class="panel" id="panelProps">
+    <div class="panel-header"><span>Properties</span>
+      <span class="flex1"></span>
+      <button class="icon-btn sm collapse-btn" data-panel="panelProps" title="Collapse"></button>
+    </div>
+    <div id="propsBody" class="props-body">
+      <div class="props-empty" id="propsEmpty">
+        <div class="props-empty-icon"></div>
+        <p>Click anything on the page — a heading, a photo, a button — and you can change it here.</p>
+        <p class="hint">Double-click text on the page to edit the words right away.</p>
+      </div>
+      <div id="propsContent" style="display:none"></div>
+    </div>
+  </aside>
+</main>
+
+<!-- ═══ STATUS BAR ═══ -->
+<footer id="statusbar">
+  <span class="sb-item" id="sbProject"></span>
+  <span class="sb-item" id="sbFile"></span>
+  <span class="flex1"></span>
+  <span class="sb-item" id="sbMessage"></span>
+  <span class="sb-item" id="sbCursor"></span>
+  <span class="sb-item" id="sbServer"><span class="sb-dot off"></span>PHP</span>
+  <span class="sb-item" id="sbVersion"></span>
+</footer>
+
+<!-- ═══ HOME SCREEN ═══ -->
+<div id="homeScreen" style="display:none"></div>
+
+<!-- ═══ OVERLAYS ═══ -->
+<div id="toasts"></div>
+<div id="ctxmenu" class="ctxmenu" style="display:none"></div>
+<div id="modalRoot"></div>
+
+<script src="js/icons.js"></script>
+<script src="js/app.js"></script>
+<script src="js/changelog.js"></script>
+<script src="js/edits.js"></script>
+<script src="js/editor.js"></script>
+<script src="js/project.js"></script>
+<script src="js/preview.js"></script>
+<script src="js/props.js"></script>
+<script src="js/deploy.js"></script>
+<script src="js/home.js"></script>
+<script src="js/boot.js"></script>
+</body>
+</html>

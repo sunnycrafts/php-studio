@@ -1,0 +1,77 @@
+{
+  "name": "php-studio",
+  "productName": "PHP Studio",
+  "version": "1.4.1",
+  "description": "Visual PHP website editor with live preview, WordPress shim, and FTP deploy — Windows 11 Fluent design.",
+  "main": "main/main.js",
+  "author": "Sunny",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win portable"
+  },
+  "devDependencies": {
+    "electron": "^33.0.0",
+    "electron-builder": "^25.0.0",
+    "ws": "^8.21.1"
+  },
+  "dependencies": {
+    "basic-ftp": "^5.0.5",
+    "monaco-editor": "^0.52.0"
+  },
+  "build": {
+    "appId": "com.sunny.phpstudio",
+    "asar": true,
+    "productName": "PHP Studio",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main/**/*",
+      "renderer/**/*",
+      "package.json",
+      "node_modules/basic-ftp/**/*",
+      "!node_modules/monaco-editor/**",
+      "!**/*.map"
+    ],
+    "extraResources": [
+      {
+        "from": "php",
+        "to": "php"
+      },
+      {
+        "from": "samples",
+        "to": "samples"
+      },
+      {
+        "from": "shim",
+        "to": "shim"
+      },
+      {
+        "from": "node_modules/monaco-editor/min",
+        "to": "monaco"
+      }
+    ],
+    "win": {
+      "target": [
+        "portable",
+        "nsis"
+      ],
+      "icon": "build/icon.ico",
+      "signAndEditExecutable": false
+    },
+    "portable": {
+      "artifactName": "12 - PHP Studio Portable.exe"
+    },
+    "nsis": {
+      "artifactName": "12 - PHP Studio.exe",
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "uninstallDisplayName": "PHP Studio",
+      "deleteAppDataOnUninstall": false
+    }
+  }
+}
